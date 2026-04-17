@@ -4,11 +4,18 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if exists)
+# Install build dependencies for native modules
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    linux-headers
+
+# Copy package.json
 COPY package.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --build-from-source
 
 # Copy the websocket server file
 COPY websocket-server.js ./
